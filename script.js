@@ -1,349 +1,173 @@
-/* ============================================
-   ExterStore - Premium FiveM Scripts Store
-   JavaScript - Animations & Interactivity
-   ============================================ */
+const products = [
+  {id:'adm-01',name:'Admin Dashboard Pro',framework:'ESX',priceUSD:24,priceIDR:389000,desc:'Advanced moderation panel, logs, and anti abuse actions.'},
+  {id:'hud-02',name:'Neon HUD System',framework:'Standalone',priceUSD:16,priceIDR:249000,desc:'Optimized player HUD with speedometer and minimap controls.'},
+  {id:'inv-03',name:'Inventory X',framework:'QBCore',priceUSD:29,priceIDR:469000,desc:'Drag and drop inventory with stash, crafting, and metadata.'},
+  {id:'gar-04',name:'Smart Garage',framework:'ESX',priceUSD:19,priceIDR:299000,desc:'Vehicle ownership, impound flows, and garage transitions.'}
+];
+
+const i18n = {
+  en: {
+    'nav.home':'Home','nav.shop':'Shop','nav.about':'About','nav.faq':'FAQ','nav.contact':'Contact',
+    'hero.title':'Premium FiveM Scripts for Modern RP Servers','hero.desc':'Fast, secure, and optimized resources for ESX, QBCore, and standalone setups. Instant delivery after payment.',
+    'hero.ctaShop':'Browse Products','hero.ctaDashboard':'My Dashboard','shop.title':'Shop / Products'
+  },
+  id: {
+    'nav.home':'Beranda','nav.shop':'Toko','nav.about':'Tentang','nav.faq':'FAQ','nav.contact':'Kontak',
+    'hero.title':'Script FiveM Premium untuk Server RP Modern','hero.desc':'Resource cepat, aman, dan optimal untuk ESX, QBCore, serta standalone. File langsung tersedia setelah pembayaran.',
+    'hero.ctaShop':'Lihat Produk','hero.ctaDashboard':'Dashboard Saya','shop.title':'Toko / Produk'
+  }
+};
+
+const gateway = {
+  paypal: {name:'PayPal', checkout: purchase },
+  stripe: {name:'Stripe', checkout: purchase }
+};
+
+const state = {
+  selected: null,
+  checkoutProduct: null,
+  currency: localStorage.getItem('currency') || 'USD',
+  lang: localStorage.getItem('lang') || 'en',
+  dark: localStorage.getItem('theme') === 'dark'
+};
+
+const $ = (id) => document.getElementById(id);
+const formatPrice = (p) => state.currency === 'USD' ? `$${p.priceUSD}` : `Rp ${p.priceIDR.toLocaleString('id-ID')}`;
 
 document.addEventListener('DOMContentLoaded', () => {
-    initParticles();
-    initNavbar();
-    initMobileMenu();
-    initScrollReveal();
-    initCounters();
-    initTypingEffect();
-    initTestimonialsSlider();
-    initSmoothScroll();
+  bindNav();
+  bindSettings();
+  renderProducts();
+  applyLang();
+  loadHistory();
+  bindForms();
 });
 
-/* === Particle System === */
-function initParticles() {
-    const canvas = document.getElementById('particles-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let mouse = { x: null, y: null, radius: 150 };
-
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.x;
-        mouse.y = e.y;
-    });
-
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
-            this.opacity = Math.random() * 0.5 + 0.1;
-        }
-
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            if (mouse.x != null && mouse.y != null) {
-                const dx = mouse.x - this.x;
-                const dy = mouse.y - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < mouse.radius) {
-                    const force = (mouse.radius - dist) / mouse.radius;
-                    this.x -= dx * force * 0.02;
-                    this.y -= dy * force * 0.02;
-                }
-            }
-
-            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-        }
-
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(46, 204, 113, ${this.opacity})`;
-            ctx.fill();
-        }
-    }
-
-    const particleCount = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-    }
-
-    function connectParticles() {
-        for (let a = 0; a < particles.length; a++) {
-            for (let b = a + 1; b < particles.length; b++) {
-                const dx = particles[a].x - particles[b].x;
-                const dy = particles[a].y - particles[b].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 120) {
-                    const opacity = (1 - dist / 120) * 0.15;
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(46, 204, 113, ${opacity})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.moveTo(particles[a].x, particles[a].y);
-                    ctx.lineTo(particles[b].x, particles[b].y);
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.update();
-            p.draw();
-        });
-        connectParticles();
-        requestAnimationFrame(animate);
-    }
-    animate();
+function bindNav(){
+  $('menuToggle').addEventListener('click', () => {
+    const menu = $('menu');
+    menu.classList.toggle('open');
+  });
 }
 
-/* === Navbar Scroll Effect === */
-function initNavbar() {
-    const navbar = document.getElementById('navbar');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section[id]');
+function bindSettings(){
+  $('currencySelect').value = state.currency;
+  $('languageSelect').value = state.lang;
+  if (state.dark) document.body.classList.add('dark');
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-
-        // Active link based on scroll
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 120;
-            if (window.scrollY >= sectionTop) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-    });
+  $('currencySelect').addEventListener('change', (e)=>{
+    state.currency=e.target.value;localStorage.setItem('currency',state.currency);renderProducts();if(state.selected) showDetail(state.selected);
+  });
+  $('languageSelect').addEventListener('change', (e)=>{
+    state.lang=e.target.value;localStorage.setItem('lang',state.lang);applyLang();
+  });
+  $('themeToggle').addEventListener('click', ()=>{
+    state.dark=!state.dark;document.body.classList.toggle('dark',state.dark);localStorage.setItem('theme',state.dark?'dark':'light');
+  });
 }
 
-/* === Mobile Menu === */
-function initMobileMenu() {
-    const toggle = document.getElementById('mobileToggle');
-    const navLinks = document.getElementById('navLinks');
-
-    if (!toggle || !navLinks) return;
-
-    toggle.addEventListener('click', () => {
-        toggle.classList.toggle('active');
-        navLinks.classList.toggle('active');
-    });
-
-    navLinks.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            toggle.classList.remove('active');
-            navLinks.classList.remove('active');
-        });
-    });
+function applyLang(){
+  document.documentElement.lang = state.lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.dataset.i18n;
+    el.textContent = i18n[state.lang][key] || i18n.en[key] || el.textContent;
+  });
 }
 
-/* === Scroll Reveal === */
-function initScrollReveal() {
-    const reveals = document.querySelectorAll('.reveal');
+function renderProducts(){
+  const q = $('searchInput').value?.toLowerCase() || '';
+  const cat = $('categoryFilter').value;
+  const list = products.filter(p => (cat === 'all' || p.framework === cat) && (p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)));
+  $('productGrid').innerHTML = list.map(p => `
+    <article class="product" data-id="${p.id}">
+      <h3>${p.name}</h3>
+      <small>${p.framework}</small>
+      <p>${p.desc}</p>
+      <div class="row compact">
+        <span class="price">${formatPrice(p)}</span>
+        <button class="btn btn-ghost" data-detail="${p.id}">Detail</button>
+        <button class="btn btn-primary" data-buy="${p.id}">Buy</button>
+      </div>
+    </article>
+  `).join('');
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.classList.add('active');
-                }, index * 100);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-
-    reveals.forEach(el => observer.observe(el));
+  document.querySelectorAll('[data-detail]').forEach(btn=>btn.addEventListener('click',()=>showDetail(btn.dataset.detail)));
+  document.querySelectorAll('[data-buy]').forEach(btn=>btn.addEventListener('click',()=>openCheckout(btn.dataset.buy)));
 }
 
-/* === Counter Animation === */
-function initCounters() {
-    const counters = document.querySelectorAll('.stat-number');
+$('searchInput').addEventListener('input', renderProducts);
+$('categoryFilter').addEventListener('change', renderProducts);
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const counter = entry.target;
-                const target = parseInt(counter.getAttribute('data-target'));
-                const duration = 2000;
-                const start = 0;
-                const startTime = performance.now();
-
-                function updateCounter(currentTime) {
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const easeOut = 1 - Math.pow(1 - progress, 3);
-                    const current = Math.floor(start + (target - start) * easeOut);
-                    counter.textContent = current;
-
-                    if (progress < 1) {
-                        requestAnimationFrame(updateCounter);
-                    } else {
-                        counter.textContent = target;
-                    }
-                }
-
-                requestAnimationFrame(updateCounter);
-                observer.unobserve(counter);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    counters.forEach(c => observer.observe(c));
+function showDetail(id){
+  const p = products.find(x=>x.id===id); if(!p) return;
+  state.selected = id;
+  $('detailCard').innerHTML = `
+    <h3>${p.name}</h3>
+    <p class="muted">Framework: ${p.framework}</p>
+    <p>${p.desc}</p>
+    <ul>
+      <li>• Optimized for OneSync + latest artifacts</li>
+      <li>• Includes docs + changelog</li>
+      <li>• Free updates for 12 months</li>
+    </ul>
+    <div class="row"><span class="price">${formatPrice(p)}</span><button class="btn btn-primary" onclick="openCheckout('${p.id}')">Checkout</button></div>
+  `;
 }
 
-/* === Typing Effect === */
-function initTypingEffect() {
-    const element = document.getElementById('typingText');
-    if (!element) return;
-
-    const words = ['FiveM Server', 'Roleplay Experience', 'Gaming Community', 'Server Performance'];
-    let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    let typeSpeed = 100;
-
-    function type() {
-        const currentWord = words[wordIndex];
-
-        if (isDeleting) {
-            element.textContent = currentWord.substring(0, charIndex - 1);
-            charIndex--;
-            typeSpeed = 50;
-        } else {
-            element.textContent = currentWord.substring(0, charIndex + 1);
-            charIndex++;
-            typeSpeed = 100;
-        }
-
-        if (!isDeleting && charIndex === currentWord.length) {
-            typeSpeed = 2000;
-            isDeleting = true;
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % words.length;
-            typeSpeed = 500;
-        }
-
-        setTimeout(type, typeSpeed);
-    }
-
-    setTimeout(type, 1000);
+function openCheckout(id){
+  const p = products.find(x=>x.id===id); if(!p) return;
+  state.checkoutProduct = id;
+  $('checkoutProduct').textContent = `${p.name} · ${formatPrice(p)}`;
+  $('checkoutModal').classList.add('show');
 }
 
-/* === Testimonials Slider === */
-function initTestimonialsSlider() {
-    const track = document.getElementById('testimonialsTrack');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const dotsContainer = document.getElementById('sliderDots');
+$('cancelCheckout').addEventListener('click',()=> $('checkoutModal').classList.remove('show'));
+$('confirmCheckout').addEventListener('click',()=>{
+  const email = $('checkoutEmail').value.trim();
+  const method = $('paymentMethod').value;
+  if(!email || !/^\S+@\S+\.\S+$/.test(email)) return toast('Valid email is required');
+  gateway[method].checkout({email, productId: state.checkoutProduct, provider: method});
+});
 
-    if (!track || !prevBtn || !nextBtn || !dotsContainer) return;
-
-    const cards = track.querySelectorAll('.testimonial-card');
-    const totalSlides = cards.length;
-    let currentSlide = 0;
-    let autoSlideInterval;
-
-    // Create dots
-    for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('button');
-        dot.classList.add('slider-dot');
-        if (i === 0) dot.classList.add('active');
-        dot.addEventListener('click', () => goToSlide(i));
-        dotsContainer.appendChild(dot);
-    }
-
-    function goToSlide(index) {
-        currentSlide = index;
-        track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        updateDots();
-        resetAutoSlide();
-    }
-
-    function updateDots() {
-        dotsContainer.querySelectorAll('.slider-dot').forEach((dot, i) => {
-            dot.classList.toggle('active', i === currentSlide);
-        });
-    }
-
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        goToSlide(currentSlide);
-    }
-
-    function prevSlide() {
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        goToSlide(currentSlide);
-    }
-
-    function startAutoSlide() {
-        autoSlideInterval = setInterval(nextSlide, 5000);
-    }
-
-    function resetAutoSlide() {
-        clearInterval(autoSlideInterval);
-        startAutoSlide();
-    }
-
-    prevBtn.addEventListener('click', prevSlide);
-    nextBtn.addEventListener('click', nextSlide);
-
-    // Touch/swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    track.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    track.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) > 50) {
-            if (diff > 0) nextSlide();
-            else prevSlide();
-        }
-    }, { passive: true });
-
-    startAutoSlide();
+function purchase(payload){
+  const p = products.find(x=>x.id===payload.productId);
+  const token = crypto.randomUUID().split('-')[0];
+  const expiry = new Date(Date.now() + 24*3600*1000).toISOString();
+  const item = {id: Date.now(), email: payload.email, provider: payload.provider, product: p.name, token, expiry};
+  const history = JSON.parse(localStorage.getItem('purchase_history') || '[]');
+  history.unshift(item);
+  localStorage.setItem('purchase_history', JSON.stringify(history));
+  loadHistory();
+  $('checkoutModal').classList.remove('show');
+  toast(`Payment success via ${payload.provider.toUpperCase()}. Download unlocked.`);
 }
 
-/* === Smooth Scroll === */
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
+function loadHistory(){
+  const history = JSON.parse(localStorage.getItem('purchase_history') || '[]');
+  const box = $('purchaseHistory');
+  if(!history.length){ box.className='history empty'; box.textContent='No purchases yet.'; return; }
+  box.className='history';
+  box.innerHTML = history.map(item=>`<article><strong>${item.product}</strong><p>${item.email} · ${item.provider.toUpperCase()}</p><p>Token: <code>${item.token}</code> · Expires: ${new Date(item.expiry).toLocaleString()}</p><a href="#" onclick="event.preventDefault();toast('Download started (demo) for token ${item.token}')">Download</a></article>`).join('<hr/>');
+}
+
+$('clearHistory').addEventListener('click',()=>{localStorage.removeItem('purchase_history');loadHistory();toast('Purchase history cleared');});
+
+function bindForms(){
+  $('contactForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const name = String(fd.get('name')||'').trim();
+    const email = String(fd.get('email')||'').trim();
+    const msg = String(fd.get('message')||'').trim();
+    if(name.length < 2 || !/^\S+@\S+\.\S+$/.test(email) || msg.length < 10) return toast('Please complete form correctly.');
+    toast('Message sent! We will reply soon.');
+    e.target.reset();
+  });
+}
+
+function toast(message){
+  const node = $('toast');
+  node.textContent = message;
+  node.classList.add('show');
+  setTimeout(()=>node.classList.remove('show'), 2200);
 }
