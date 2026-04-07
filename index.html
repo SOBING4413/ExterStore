@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,27 +10,74 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Particle Canvas -->
     <canvas id="particles-canvas"></canvas>
 
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="#" class="nav-logo">
+            <a href="index.html" class="nav-logo">
                 <img src="logo.png" alt="ExterStore Logo" class="logo-img">
                 <span class="logo-text">ExterStore</span>
             </a>
             <ul class="nav-links" id="navLinks">
-                <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#products" class="nav-link">Products</a></li>
-                <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="#testimonials" class="nav-link">Reviews</a></li>
-                <li><a href="docs.html" class="nav-link">Docs</a></li>
+                <li><a href="#home" class="nav-link active" data-i18n="nav_home">Home</a></li>
+                <li><a href="#products" class="nav-link" data-i18n="nav_products">Products</a></li>
+                <li><a href="#features" class="nav-link" data-i18n="nav_features">Features</a></li>
+                <li><a href="#testimonials" class="nav-link" data-i18n="nav_reviews">Reviews</a></li>
+                <li><a href="docs.html" class="nav-link" data-i18n="nav_docs">Docs</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="#products" class="btn btn-primary btn-sm">
-                    <i class="fas fa-shopping-cart"></i> Store
-                </a>
+                <!-- Language Selector -->
+                <div class="dropdown" id="langDropdown">
+                    <button class="dropdown-btn" id="langBtn">
+                        <i class="fas fa-globe"></i>
+                        <span id="currentLang">ID</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </button>
+                    <div class="dropdown-menu" id="langMenu">
+                        <button class="dropdown-item active" data-lang="id"><span class="flag">🇮🇩</span> Indonesia</button>
+                        <button class="dropdown-item" data-lang="en"><span class="flag">🇺🇸</span> English</button>
+                        <button class="dropdown-item" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
+                        <button class="dropdown-item" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
+                        <button class="dropdown-item" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
+                        <button class="dropdown-item" data-lang="ja"><span class="flag">🇯🇵</span> 日本語</button>
+                        <button class="dropdown-item" data-lang="ko"><span class="flag">🇰🇷</span> 한국어</button>
+                        <button class="dropdown-item" data-lang="zh"><span class="flag">🇨🇳</span> 中文</button>
+                        <button class="dropdown-item" data-lang="pt"><span class="flag">🇧🇷</span> Português</button>
+                        <button class="dropdown-item" data-lang="ru"><span class="flag">🇷🇺</span> Русский</button>
+                        <button class="dropdown-item" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
+                        <button class="dropdown-item" data-lang="th"><span class="flag">🇹🇭</span> ไทย</button>
+                        <button class="dropdown-item" data-lang="tr"><span class="flag">🇹🇷</span> Türkçe</button>
+                        <button class="dropdown-item" data-lang="hi"><span class="flag">🇮🇳</span> हिन्दी</button>
+                    </div>
+                </div>
+                <!-- Currency Selector -->
+                <div class="dropdown" id="currencyDropdown">
+                    <button class="dropdown-btn" id="currencyBtn">
+                        <i class="fas fa-coins"></i>
+                        <span id="currentCurrency">IDR</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </button>
+                    <div class="dropdown-menu" id="currencyMenu">
+                        <button class="dropdown-item active" data-currency="IDR"><span class="flag">🇮🇩</span> IDR - Rupiah</button>
+                        <button class="dropdown-item" data-currency="USD"><span class="flag">🇺🇸</span> USD - Dollar</button>
+                        <button class="dropdown-item" data-currency="EUR"><span class="flag">🇪🇺</span> EUR - Euro</button>
+                        <button class="dropdown-item" data-currency="GBP"><span class="flag">🇬🇧</span> GBP - Pound</button>
+                        <button class="dropdown-item" data-currency="JPY"><span class="flag">🇯🇵</span> JPY - Yen</button>
+                        <button class="dropdown-item" data-currency="KRW"><span class="flag">🇰🇷</span> KRW - Won</button>
+                        <button class="dropdown-item" data-currency="CNY"><span class="flag">🇨🇳</span> CNY - Yuan</button>
+                        <button class="dropdown-item" data-currency="BRL"><span class="flag">🇧🇷</span> BRL - Real</button>
+                        <button class="dropdown-item" data-currency="RUB"><span class="flag">🇷🇺</span> RUB - Ruble</button>
+                        <button class="dropdown-item" data-currency="THB"><span class="flag">🇹🇭</span> THB - Baht</button>
+                        <button class="dropdown-item" data-currency="TRY"><span class="flag">🇹🇷</span> TRY - Lira</button>
+                        <button class="dropdown-item" data-currency="INR"><span class="flag">🇮🇳</span> INR - Rupee</button>
+                    </div>
+                </div>
+                <!-- Cart Button -->
+                <button class="cart-btn" id="cartToggle">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
                 <button class="mobile-toggle" id="mobileToggle">
                     <span></span><span></span><span></span>
                 </button>
@@ -38,54 +85,130 @@
         </div>
     </nav>
 
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-header">
+            <h3><i class="fas fa-shopping-cart"></i> <span data-i18n="cart_title">Shopping Cart</span></h3>
+            <button class="cart-close" id="cartClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-drawer-body" id="cartBody">
+            <div class="cart-empty" id="cartEmpty">
+                <i class="fas fa-shopping-bag"></i>
+                <p data-i18n="cart_empty">Your cart is empty</p>
+                <a href="#products" class="btn btn-primary btn-sm" id="cartShopBtn" data-i18n="cart_shop_now">Shop Now</a>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+        </div>
+        <div class="cart-drawer-footer" id="cartFooter" style="display:none;">
+            <div class="cart-total">
+                <span data-i18n="cart_total">Total:</span>
+                <span class="cart-total-amount" id="cartTotal">Rp 0</span>
+            </div>
+            <a href="checkout.html" class="btn btn-primary btn-lg cart-checkout-btn" data-i18n="cart_checkout">Checkout</a>
+            <button class="btn btn-outline btn-sm cart-clear-btn" id="cartClearBtn" data-i18n="cart_clear">Clear Cart</button>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modalImg" src="" alt="">
+                    <div class="modal-badge" id="modalBadge"></div>
+                </div>
+                <div class="modal-info">
+                    <div class="modal-tags" id="modalTags"></div>
+                    <h2 id="modalName"></h2>
+                    <p id="modalDesc" class="modal-desc"></p>
+                    <div class="modal-features">
+                        <h4 data-i18n="modal_features">Features:</h4>
+                        <ul id="modalFeatures"></ul>
+                    </div>
+                    <div class="modal-price-row">
+                        <div class="modal-price" id="modalPrice"></div>
+                        <button class="btn btn-primary btn-lg modal-add-cart" id="modalAddCart">
+                            <i class="fas fa-cart-plus"></i> <span data-i18n="modal_add_cart">Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-glow"></div>
         <div class="hero-content">
             <div class="hero-badge animate-fade-in">
-                <i class="fas fa-bolt"></i> Premium FiveM Scripts
+                <i class="fas fa-bolt"></i> <span data-i18n="hero_badge">Premium FiveM Scripts</span>
             </div>
             <h1 class="hero-title animate-fade-in-up">
-                Level Up Your
+                <span data-i18n="hero_title_1">Level Up Your</span>
                 <span class="gradient-text" id="typingText">FiveM Server</span>
             </h1>
-            <p class="hero-description animate-fade-in-up delay-1">
-                Script premium berkualitas tinggi untuk server FiveM kamu. Dioptimasi untuk performa terbaik, aman, dan mudah digunakan.
+            <p class="hero-description animate-fade-in-up delay-1" data-i18n="hero_desc">
+                Premium high-quality scripts for your FiveM server. Optimized for the best performance, secure, and easy to use.
             </p>
             <div class="hero-buttons animate-fade-in-up delay-2">
                 <a href="#products" class="btn btn-primary btn-lg">
-                    <i class="fas fa-store"></i> Lihat Products
+                    <i class="fas fa-store"></i> <span data-i18n="hero_btn_products">View Products</span>
                 </a>
                 <a href="docs.html" class="btn btn-outline btn-lg">
-                    <i class="fas fa-book"></i> Documentation
+                    <i class="fas fa-book"></i> <span data-i18n="hero_btn_docs">Documentation</span>
                 </a>
             </div>
             <div class="hero-stats animate-fade-in-up delay-3">
                 <div class="stat-item">
                     <span class="stat-number" data-target="150">0</span>+
-                    <span class="stat-label">Scripts Sold</span>
+                    <span class="stat-label" data-i18n="stat_sold">Scripts Sold</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat-item">
                     <span class="stat-number" data-target="98">0</span>%
-                    <span class="stat-label">Satisfaction</span>
+                    <span class="stat-label" data-i18n="stat_satisfaction">Satisfaction</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat-item">
                     <span class="stat-number" data-target="50">0</span>+
-                    <span class="stat-label">Happy Clients</span>
+                    <span class="stat-label" data-i18n="stat_clients">Happy Clients</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="14">0</span>+
+                    <span class="stat-label" data-i18n="stat_languages">Languages</span>
                 </div>
             </div>
         </div>
         <div class="hero-image animate-float">
-            <div class="hero-card-glow"></div>
-            <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095284/2026-04-07/3ccd2b19-914b-4d5c-8f27-8f76b8eb363f.png" alt="Hero Background" class="hero-img">
+            <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095359/2026-04-07/3d4882ce-712d-4bc6-a66b-2d527d3973d1.png" alt="Hero" class="hero-img">
         </div>
         <div class="scroll-indicator">
-            <div class="mouse">
-                <div class="wheel"></div>
+            <div class="mouse"><div class="wheel"></div></div>
+            <span data-i18n="scroll_down">Scroll Down</span>
+        </div>
+    </section>
+
+    <!-- Trusted Payment Section -->
+    <section class="section trusted-section">
+        <div class="container">
+            <div class="trusted-content reveal">
+                <span class="section-badge"><i class="fas fa-shield-alt"></i> <span data-i18n="trusted_badge">Trusted & Secure</span></span>
+                <h2 class="section-title" data-i18n="trusted_title">Accepted <span class="gradient-text">Payment Methods</span></h2>
+                <div class="payment-logos">
+                    <div class="payment-logo"><i class="fab fa-paypal"></i><span>PayPal</span></div>
+                    <div class="payment-logo"><i class="fab fa-stripe-s"></i><span>Stripe</span></div>
+                    <div class="payment-logo"><i class="fab fa-bitcoin"></i><span>Crypto</span></div>
+                    <div class="payment-logo"><i class="fas fa-wallet"></i><span>GoPay</span></div>
+                    <div class="payment-logo"><i class="fas fa-mobile-alt"></i><span>OVO</span></div>
+                    <div class="payment-logo"><i class="fas fa-credit-card"></i><span>Dana</span></div>
+                    <div class="payment-logo"><i class="fas fa-university"></i><span>Bank Transfer</span></div>
+                    <div class="payment-logo"><i class="fab fa-cc-visa"></i><span>Visa</span></div>
+                    <div class="payment-logo"><i class="fab fa-cc-mastercard"></i><span>Mastercard</span></div>
+                </div>
             </div>
-            <span>Scroll Down</span>
         </div>
     </section>
 
@@ -93,20 +216,28 @@
     <section class="section products" id="products">
         <div class="container">
             <div class="section-header reveal">
-                <span class="section-badge"><i class="fas fa-code"></i> Our Products</span>
-                <h2 class="section-title">Premium <span class="gradient-text">Scripts</span></h2>
-                <p class="section-desc">Koleksi script premium kami yang sudah teruji dan dioptimasi untuk performa terbaik server FiveM kamu.</p>
+                <span class="section-badge"><i class="fas fa-code"></i> <span data-i18n="products_badge">Our Products</span></span>
+                <h2 class="section-title"><span data-i18n="products_title_1">Premium</span> <span class="gradient-text" data-i18n="products_title_2">Scripts</span></h2>
+                <p class="section-desc" data-i18n="products_desc">Our premium script collection, tested and optimized for the best performance of your FiveM server.</p>
             </div>
-            <div class="products-grid">
+            <!-- Filter Tabs -->
+            <div class="product-filters reveal">
+                <button class="filter-btn active" data-filter="all" data-i18n="filter_all">All</button>
+                <button class="filter-btn" data-filter="esx">ESX</button>
+                <button class="filter-btn" data-filter="qbcore">QBCore</button>
+                <button class="filter-btn" data-filter="standalone">Standalone</button>
+                <button class="filter-btn" data-filter="bundle">Bundle</button>
+            </div>
+            <div class="products-grid" id="productsGrid">
                 <!-- Product 1 -->
-                <div class="product-card reveal">
+                <div class="product-card reveal" data-product="admin-dashboard" data-category="esx qbcore" data-price="250000">
                     <div class="product-badge">Best Seller</div>
                     <div class="product-image">
-                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095284/2026-04-07/8261b1d1-0df1-408c-a20c-8b82af6bc684.png" alt="Admin Dashboard">
+                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095359/2026-04-07/5181dc36-5d70-4766-a3e9-34bc3cfb12bd.png" alt="Admin Dashboard">
                         <div class="product-overlay">
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
+                            <button class="btn btn-primary btn-sm product-detail-btn" data-product="admin-dashboard">
+                                <i class="fas fa-eye"></i> <span data-i18n="btn_preview">Preview</span>
+                            </button>
                         </div>
                     </div>
                     <div class="product-info">
@@ -115,28 +246,28 @@
                             <span class="tag">QBCore</span>
                         </div>
                         <h3 class="product-name">Admin Dashboard</h3>
-                        <p class="product-desc">Panel admin lengkap dengan monitoring server, player management, dan real-time statistics.</p>
+                        <p class="product-desc" data-i18n="product1_desc">Complete admin panel with server monitoring, player management, and real-time statistics.</p>
                         <div class="product-footer">
                             <div class="product-price">
                                 <span class="price-currency">Rp</span>
-                                <span class="price-amount">250.000</span>
+                                <span class="price-amount" data-price="250000">250.000</span>
                             </div>
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-shopping-cart"></i> Beli
-                            </a>
+                            <button class="btn btn-primary btn-sm add-to-cart-btn" data-product="admin-dashboard">
+                                <i class="fas fa-cart-plus"></i> <span data-i18n="btn_add_cart">Add</span>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Product 2 -->
-                <div class="product-card reveal">
+                <div class="product-card reveal" data-product="custom-hud" data-category="esx standalone" data-price="180000">
                     <div class="product-badge hot">Popular</div>
                     <div class="product-image">
-                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095284/2026-04-07/e9086ade-e99c-4cfe-8490-0e15c5d70c6b.png" alt="Custom HUD">
+                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095359/2026-04-07/a3e292ba-e3b6-4de5-baac-fb7574a4ee2e.png" alt="Custom HUD">
                         <div class="product-overlay">
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
+                            <button class="btn btn-primary btn-sm product-detail-btn" data-product="custom-hud">
+                                <i class="fas fa-eye"></i> <span data-i18n="btn_preview">Preview</span>
+                            </button>
                         </div>
                     </div>
                     <div class="product-info">
@@ -145,28 +276,28 @@
                             <span class="tag">Standalone</span>
                         </div>
                         <h3 class="product-name">Custom HUD</h3>
-                        <p class="product-desc">HUD modern dengan health, armor, minimap, speedometer dan weapon selector yang customizable.</p>
+                        <p class="product-desc" data-i18n="product2_desc">Modern HUD with health, armor, minimap, speedometer and customizable weapon selector.</p>
                         <div class="product-footer">
                             <div class="product-price">
                                 <span class="price-currency">Rp</span>
-                                <span class="price-amount">180.000</span>
+                                <span class="price-amount" data-price="180000">180.000</span>
                             </div>
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-shopping-cart"></i> Beli
-                            </a>
+                            <button class="btn btn-primary btn-sm add-to-cart-btn" data-product="custom-hud">
+                                <i class="fas fa-cart-plus"></i> <span data-i18n="btn_add_cart">Add</span>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Product 3 -->
-                <div class="product-card reveal">
+                <div class="product-card reveal" data-product="inventory-system" data-category="qbcore esx" data-price="300000">
                     <div class="product-badge new">New</div>
                     <div class="product-image">
-                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095284/2026-04-07/09e29620-072c-4ce6-9c4b-a440757230c9.png" alt="Inventory System">
+                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095359/2026-04-07/58177ee9-8dc4-4285-a8d8-6e0e0f44fa68.png" alt="Inventory System">
                         <div class="product-overlay">
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
+                            <button class="btn btn-primary btn-sm product-detail-btn" data-product="inventory-system">
+                                <i class="fas fa-eye"></i> <span data-i18n="btn_preview">Preview</span>
+                            </button>
                         </div>
                     </div>
                     <div class="product-info">
@@ -175,27 +306,27 @@
                             <span class="tag">ESX</span>
                         </div>
                         <h3 class="product-name">Inventory System</h3>
-                        <p class="product-desc">Sistem inventory drag & drop dengan weight system, hotbar, dan item crafting yang lengkap.</p>
+                        <p class="product-desc" data-i18n="product3_desc">Drag & drop inventory system with weight system, hotbar, and complete item crafting.</p>
                         <div class="product-footer">
                             <div class="product-price">
                                 <span class="price-currency">Rp</span>
-                                <span class="price-amount">300.000</span>
+                                <span class="price-amount" data-price="300000">300.000</span>
                             </div>
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-shopping-cart"></i> Beli
-                            </a>
+                            <button class="btn btn-primary btn-sm add-to-cart-btn" data-product="inventory-system">
+                                <i class="fas fa-cart-plus"></i> <span data-i18n="btn_add_cart">Add</span>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Product 4 -->
-                <div class="product-card reveal">
+                <div class="product-card reveal" data-product="garage-system" data-category="esx qbcore" data-price="200000">
                     <div class="product-image">
-                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095284/2026-04-07/8261b1d1-0df1-408c-a20c-8b82af6bc684.png" alt="Garage System">
+                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095359/2026-04-07/e3893f8c-b394-4287-97a1-fbf8a25c7ad6.png" alt="Garage System">
                         <div class="product-overlay">
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
+                            <button class="btn btn-primary btn-sm product-detail-btn" data-product="garage-system">
+                                <i class="fas fa-eye"></i> <span data-i18n="btn_preview">Preview</span>
+                            </button>
                         </div>
                     </div>
                     <div class="product-info">
@@ -204,27 +335,27 @@
                             <span class="tag">QBCore</span>
                         </div>
                         <h3 class="product-name">Garage System</h3>
-                        <p class="product-desc">Sistem garasi modern dengan preview kendaraan 3D, customization, dan multi-garage support.</p>
+                        <p class="product-desc" data-i18n="product4_desc">Modern garage system with 3D vehicle preview, customization, and multi-garage support.</p>
                         <div class="product-footer">
                             <div class="product-price">
                                 <span class="price-currency">Rp</span>
-                                <span class="price-amount">200.000</span>
+                                <span class="price-amount" data-price="200000">200.000</span>
                             </div>
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-shopping-cart"></i> Beli
-                            </a>
+                            <button class="btn btn-primary btn-sm add-to-cart-btn" data-product="garage-system">
+                                <i class="fas fa-cart-plus"></i> <span data-i18n="btn_add_cart">Add</span>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Product 5 -->
-                <div class="product-card reveal">
+                <div class="product-card reveal" data-product="phone-system" data-category="standalone" data-price="350000">
                     <div class="product-image">
-                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095284/2026-04-07/e9086ade-e99c-4cfe-8490-0e15c5d70c6b.png" alt="Phone System">
+                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095359/2026-04-07/8bcdedd0-3387-4153-ba4d-19d0dd0fd9b4.png" alt="Phone System">
                         <div class="product-overlay">
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
+                            <button class="btn btn-primary btn-sm product-detail-btn" data-product="phone-system">
+                                <i class="fas fa-eye"></i> <span data-i18n="btn_preview">Preview</span>
+                            </button>
                         </div>
                     </div>
                     <div class="product-info">
@@ -232,28 +363,28 @@
                             <span class="tag">Standalone</span>
                         </div>
                         <h3 class="product-name">Phone System</h3>
-                        <p class="product-desc">Smartphone in-game dengan messaging, contacts, camera, bank app, dan social media integration.</p>
+                        <p class="product-desc" data-i18n="product5_desc">In-game smartphone with messaging, contacts, camera, bank app, and social media integration.</p>
                         <div class="product-footer">
                             <div class="product-price">
                                 <span class="price-currency">Rp</span>
-                                <span class="price-amount">350.000</span>
+                                <span class="price-amount" data-price="350000">350.000</span>
                             </div>
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-shopping-cart"></i> Beli
-                            </a>
+                            <button class="btn btn-primary btn-sm add-to-cart-btn" data-product="phone-system">
+                                <i class="fas fa-cart-plus"></i> <span data-i18n="btn_add_cart">Add</span>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Product 6 -->
-                <div class="product-card reveal">
+                <div class="product-card reveal" data-product="starter-bundle" data-category="esx qbcore bundle" data-price="650000" data-old-price="930000">
                     <div class="product-badge">Bundle</div>
                     <div class="product-image">
-                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095284/2026-04-07/09e29620-072c-4ce6-9c4b-a440757230c9.png" alt="Starter Pack">
+                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1095359/2026-04-07/74630368-48af-4515-8e5e-8944ddd3d6df.png" alt="Starter Pack">
                         <div class="product-overlay">
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
+                            <button class="btn btn-primary btn-sm product-detail-btn" data-product="starter-bundle">
+                                <i class="fas fa-eye"></i> <span data-i18n="btn_preview">Preview</span>
+                            </button>
                         </div>
                     </div>
                     <div class="product-info">
@@ -263,16 +394,16 @@
                             <span class="tag">Bundle</span>
                         </div>
                         <h3 class="product-name">Starter Pack Bundle</h3>
-                        <p class="product-desc">Paket lengkap untuk memulai server FiveM kamu. Termasuk HUD, inventory, garage, dan admin panel.</p>
+                        <p class="product-desc" data-i18n="product6_desc">Complete package to start your FiveM server. Includes HUD, inventory, garage, and admin panel.</p>
                         <div class="product-footer">
                             <div class="product-price">
-                                <span class="price-old">Rp 930.000</span>
+                                <span class="price-old" data-old-price="930000">Rp 930.000</span>
                                 <span class="price-currency">Rp</span>
-                                <span class="price-amount">650.000</span>
+                                <span class="price-amount" data-price="650000">650.000</span>
                             </div>
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fas fa-shopping-cart"></i> Beli
-                            </a>
+                            <button class="btn btn-primary btn-sm add-to-cart-btn" data-product="starter-bundle">
+                                <i class="fas fa-cart-plus"></i> <span data-i18n="btn_add_cart">Add</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -284,52 +415,73 @@
     <section class="section features" id="features">
         <div class="container">
             <div class="section-header reveal">
-                <span class="section-badge"><i class="fas fa-star"></i> Why Choose Us</span>
-                <h2 class="section-title">Kenapa Pilih <span class="gradient-text">ExterStore</span>?</h2>
-                <p class="section-desc">Kami memberikan yang terbaik untuk server FiveM kamu dengan kualitas premium dan support 24/7.</p>
+                <span class="section-badge"><i class="fas fa-star"></i> <span data-i18n="features_badge">Why Choose Us</span></span>
+                <h2 class="section-title"><span data-i18n="features_title_1">Why Choose</span> <span class="gradient-text">ExterStore</span>?</h2>
+                <p class="section-desc" data-i18n="features_desc">We provide the best for your FiveM server with premium quality and 24/7 support.</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>Optimized Performance</h3>
-                    <p>Semua script kami dioptimasi untuk resmon rendah. Tidak akan membebani server kamu.</p>
+                    <div class="feature-icon"><i class="fas fa-rocket"></i></div>
+                    <h3 data-i18n="feature1_title">Optimized Performance</h3>
+                    <p data-i18n="feature1_desc">All our scripts are optimized for low resmon. Won't burden your server.</p>
                 </div>
                 <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Secure & Protected</h3>
-                    <p>Kode yang aman dengan escrow protection dan anti-cheat integration untuk keamanan maksimal.</p>
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 data-i18n="feature2_title">Secure & Protected</h3>
+                    <p data-i18n="feature2_desc">Secure code with escrow protection and anti-cheat integration for maximum security.</p>
                 </div>
                 <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>24/7 Support</h3>
-                    <p>Tim support kami siap membantu kamu kapan saja melalui Discord untuk instalasi dan troubleshooting.</p>
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3 data-i18n="feature3_title">24/7 Support</h3>
+                    <p data-i18n="feature3_desc">Our support team is ready to help you anytime via Discord for installation and troubleshooting.</p>
                 </div>
                 <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <i class="fas fa-sync-alt"></i>
-                    </div>
-                    <h3>Free Updates</h3>
-                    <p>Dapatkan update gratis selamanya. Kami terus mengembangkan dan memperbaiki script kami.</p>
+                    <div class="feature-icon"><i class="fas fa-sync-alt"></i></div>
+                    <h3 data-i18n="feature4_title">Free Updates</h3>
+                    <p data-i18n="feature4_desc">Get free updates forever. We continuously develop and improve our scripts.</p>
                 </div>
                 <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <h3>Full Documentation</h3>
-                    <p>Dokumentasi lengkap dengan panduan instalasi, konfigurasi, dan customization yang mudah dipahami.</p>
+                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                    <h3 data-i18n="feature5_title">Global Support</h3>
+                    <p data-i18n="feature5_desc">Multi-language support with 14+ languages and multi-currency payment options worldwide.</p>
                 </div>
                 <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <i class="fas fa-puzzle-piece"></i>
-                    </div>
-                    <h3>Easy Integration</h3>
-                    <p>Compatible dengan ESX, QBCore, dan framework populer lainnya. Plug and play!</p>
+                    <div class="feature-icon"><i class="fas fa-puzzle-piece"></i></div>
+                    <h3 data-i18n="feature6_title">Easy Integration</h3>
+                    <p data-i18n="feature6_desc">Compatible with ESX, QBCore, and other popular frameworks. Plug and play!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Reach Section -->
+    <section class="section global-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-badge"><i class="fas fa-earth-americas"></i> <span data-i18n="global_badge">Global Reach</span></span>
+                <h2 class="section-title" data-i18n="global_title">Serving Customers <span class="gradient-text">Worldwide</span></h2>
+                <p class="section-desc" data-i18n="global_desc">We support multiple languages, currencies, and payment methods to serve you wherever you are.</p>
+            </div>
+            <div class="global-grid reveal">
+                <div class="global-card">
+                    <div class="global-icon"><i class="fas fa-language"></i></div>
+                    <h3>14+</h3>
+                    <p data-i18n="global_languages">Languages Supported</p>
+                </div>
+                <div class="global-card">
+                    <div class="global-icon"><i class="fas fa-coins"></i></div>
+                    <h3>12+</h3>
+                    <p data-i18n="global_currencies">Currencies Available</p>
+                </div>
+                <div class="global-card">
+                    <div class="global-icon"><i class="fas fa-credit-card"></i></div>
+                    <h3>9+</h3>
+                    <p data-i18n="global_payments">Payment Methods</p>
+                </div>
+                <div class="global-card">
+                    <div class="global-icon"><i class="fas fa-users"></i></div>
+                    <h3>30+</h3>
+                    <p data-i18n="global_countries">Countries Reached</p>
                 </div>
             </div>
         </div>
@@ -339,9 +491,9 @@
     <section class="section testimonials" id="testimonials">
         <div class="container">
             <div class="section-header reveal">
-                <span class="section-badge"><i class="fas fa-comments"></i> Testimonials</span>
-                <h2 class="section-title">Apa Kata <span class="gradient-text">Mereka</span>?</h2>
-                <p class="section-desc">Review dari pelanggan yang sudah menggunakan script kami di server mereka.</p>
+                <span class="section-badge"><i class="fas fa-comments"></i> <span data-i18n="testimonials_badge">Testimonials</span></span>
+                <h2 class="section-title"><span data-i18n="testimonials_title_1">What They</span> <span class="gradient-text" data-i18n="testimonials_title_2">Say</span>?</h2>
+                <p class="section-desc" data-i18n="testimonials_desc">Reviews from customers who have used our scripts on their servers.</p>
             </div>
             <div class="testimonials-slider">
                 <div class="testimonials-track" id="testimonialsTrack">
@@ -349,11 +501,9 @@
                         <div class="testimonial-stars">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
-                        <p class="testimonial-text">"Script HUD nya keren banget! Resmon rendah dan designnya premium. Support juga fast response. Recommended!"</p>
+                        <p class="testimonial-text" data-i18n="testimonial1">"The HUD script is amazing! Low resmon and premium design. Support is also fast response. Recommended!"</p>
                         <div class="testimonial-author">
-                            <div class="author-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="author-avatar"><i class="fas fa-user"></i></div>
                             <div class="author-info">
                                 <h4>RezaGaming</h4>
                                 <span>Server Owner - IndoRP</span>
@@ -364,11 +514,9 @@
                         <div class="testimonial-stars">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
-                        <p class="testimonial-text">"Admin Dashboard nya sangat membantu untuk manage server. Fiturnya lengkap dan mudah digunakan. Worth the price!"</p>
+                        <p class="testimonial-text" data-i18n="testimonial2">"Admin Dashboard is very helpful for managing the server. Complete features and easy to use. Worth the price!"</p>
                         <div class="testimonial-author">
-                            <div class="author-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="author-avatar"><i class="fas fa-user"></i></div>
                             <div class="author-info">
                                 <h4>DarkNight</h4>
                                 <span>Developer - NightCity RP</span>
@@ -379,11 +527,9 @@
                         <div class="testimonial-stars">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                         </div>
-                        <p class="testimonial-text">"Inventory system nya smooth banget, drag and drop nya responsive. Player di server saya suka banget sama UI nya!"</p>
+                        <p class="testimonial-text" data-i18n="testimonial3">"The inventory system is super smooth, drag and drop is responsive. Players on my server love the UI!"</p>
                         <div class="testimonial-author">
-                            <div class="author-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="author-avatar"><i class="fas fa-user"></i></div>
                             <div class="author-info">
                                 <h4>AxelDev</h4>
                                 <span>Server Owner - MetroCity</span>
@@ -394,11 +540,9 @@
                         <div class="testimonial-stars">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
-                        <p class="testimonial-text">"Beli starter pack bundle dan langsung bisa setup server dalam sehari. Dokumentasinya jelas dan lengkap. Top!"</p>
+                        <p class="testimonial-text" data-i18n="testimonial4">"Bought the starter pack bundle and was able to set up the server in one day. Documentation is clear and complete. Top!"</p>
                         <div class="testimonial-author">
-                            <div class="author-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="author-avatar"><i class="fas fa-user"></i></div>
                             <div class="author-info">
                                 <h4>FajarRP</h4>
                                 <span>Server Owner - SunriseRP</span>
@@ -420,11 +564,11 @@
         <div class="cta-glow"></div>
         <div class="container">
             <div class="cta-content reveal">
-                <h2 class="cta-title">Siap Upgrade <span class="gradient-text">Server</span> Kamu?</h2>
-                <p class="cta-desc">Bergabung dengan 50+ server owner yang sudah mempercayakan script mereka kepada kami.</p>
+                <h2 class="cta-title"><span data-i18n="cta_title_1">Ready to Upgrade Your</span> <span class="gradient-text" data-i18n="cta_title_2">Server</span>?</h2>
+                <p class="cta-desc" data-i18n="cta_desc">Join 50+ server owners who have trusted their scripts to us.</p>
                 <div class="cta-buttons">
                     <a href="#products" class="btn btn-primary btn-lg">
-                        <i class="fas fa-store"></i> Lihat Products
+                        <i class="fas fa-store"></i> <span data-i18n="cta_btn_products">View Products</span>
                     </a>
                     <a href="https://discord.gg/" class="btn btn-outline btn-lg" target="_blank">
                         <i class="fab fa-discord"></i> Join Discord
@@ -443,7 +587,7 @@
                         <img src="logo.png" alt="ExterStore Logo" class="logo-img">
                         <span class="logo-text">ExterStore</span>
                     </a>
-                    <p class="footer-desc">Premium FiveM scripts untuk server kamu. Kualitas terbaik dengan harga terjangkau.</p>
+                    <p class="footer-desc" data-i18n="footer_desc">Premium FiveM scripts for your server. Best quality at affordable prices.</p>
                     <div class="footer-socials">
                         <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
@@ -452,25 +596,25 @@
                     </div>
                 </div>
                 <div class="footer-links-group">
-                    <h4>Quick Links</h4>
+                    <h4 data-i18n="footer_quick">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#products">Products</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#testimonials">Reviews</a></li>
+                        <li><a href="#home" data-i18n="nav_home">Home</a></li>
+                        <li><a href="#products" data-i18n="nav_products">Products</a></li>
+                        <li><a href="#features" data-i18n="nav_features">Features</a></li>
+                        <li><a href="#testimonials" data-i18n="nav_reviews">Reviews</a></li>
                     </ul>
                 </div>
                 <div class="footer-links-group">
-                    <h4>Resources</h4>
+                    <h4 data-i18n="footer_resources">Resources</h4>
                     <ul class="footer-links">
-                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="docs.html" data-i18n="nav_docs">Documentation</a></li>
                         <li><a href="docs.html#installation">Installation</a></li>
                         <li><a href="docs.html#configuration">Configuration</a></li>
                         <li><a href="docs.html#faq">FAQ</a></li>
                     </ul>
                 </div>
                 <div class="footer-links-group">
-                    <h4>Support</h4>
+                    <h4 data-i18n="footer_support">Support</h4>
                     <ul class="footer-links">
                         <li><a href="#">Discord Server</a></li>
                         <li><a href="#">Terms of Service</a></li>
