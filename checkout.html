@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExterStore - Checkout</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="checkout-style.css">
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navbar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logo.png" alt="ExterStore Logo" class="logo-img">
+                <span class="logo-text">ExterStore</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="nav-link" data-i18n="nav_home">Home</a></li>
+                <li><a href="index.html#products" class="nav-link" data-i18n="nav_products">Products</a></li>
+                <li><a href="index.html#features" class="nav-link" data-i18n="nav_features">Features</a></li>
+                <li><a href="index.html#testimonials" class="nav-link" data-i18n="nav_reviews">Reviews</a></li>
+                <li><a href="docs.html" class="nav-link" data-i18n="nav_docs">Docs</a></li>
+            </ul>
+            <div class="nav-actions">
+                <!-- Language Selector -->
+                <div class="dropdown" id="langDropdown">
+                    <button class="dropdown-btn" id="langBtn">
+                        <i class="fas fa-globe"></i>
+                        <span id="currentLang">ID</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </button>
+                    <div class="dropdown-menu" id="langMenu">
+                        <button class="dropdown-item active" data-lang="id"><span class="flag">🇮🇩</span> Indonesia</button>
+                        <button class="dropdown-item" data-lang="en"><span class="flag">🇺🇸</span> English</button>
+                        <button class="dropdown-item" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
+                        <button class="dropdown-item" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
+                        <button class="dropdown-item" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
+                        <button class="dropdown-item" data-lang="ja"><span class="flag">🇯🇵</span> 日本語</button>
+                        <button class="dropdown-item" data-lang="ko"><span class="flag">🇰🇷</span> 한국어</button>
+                        <button class="dropdown-item" data-lang="zh"><span class="flag">🇨🇳</span> 中文</button>
+                        <button class="dropdown-item" data-lang="pt"><span class="flag">🇧🇷</span> Português</button>
+                        <button class="dropdown-item" data-lang="ru"><span class="flag">🇷🇺</span> Русский</button>
+                        <button class="dropdown-item" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
+                        <button class="dropdown-item" data-lang="th"><span class="flag">🇹🇭</span> ไทย</button>
+                        <button class="dropdown-item" data-lang="tr"><span class="flag">🇹🇷</span> Türkçe</button>
+                        <button class="dropdown-item" data-lang="hi"><span class="flag">🇮🇳</span> हिन्दी</button>
+                    </div>
+                </div>
+                <!-- Currency Selector -->
+                <div class="dropdown" id="currencyDropdown">
+                    <button class="dropdown-btn" id="currencyBtn">
+                        <i class="fas fa-coins"></i>
+                        <span id="currentCurrency">IDR</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </button>
+                    <div class="dropdown-menu" id="currencyMenu">
+                        <button class="dropdown-item active" data-currency="IDR"><span class="flag">🇮🇩</span> IDR - Rupiah</button>
+                        <button class="dropdown-item" data-currency="USD"><span class="flag">🇺🇸</span> USD - Dollar</button>
+                        <button class="dropdown-item" data-currency="EUR"><span class="flag">🇪🇺</span> EUR - Euro</button>
+                        <button class="dropdown-item" data-currency="GBP"><span class="flag">🇬🇧</span> GBP - Pound</button>
+                        <button class="dropdown-item" data-currency="JPY"><span class="flag">🇯🇵</span> JPY - Yen</button>
+                        <button class="dropdown-item" data-currency="KRW"><span class="flag">🇰🇷</span> KRW - Won</button>
+                        <button class="dropdown-item" data-currency="CNY"><span class="flag">🇨🇳</span> CNY - Yuan</button>
+                        <button class="dropdown-item" data-currency="BRL"><span class="flag">🇧🇷</span> BRL - Real</button>
+                        <button class="dropdown-item" data-currency="RUB"><span class="flag">🇷🇺</span> RUB - Ruble</button>
+                        <button class="dropdown-item" data-currency="THB"><span class="flag">🇹🇭</span> THB - Baht</button>
+                        <button class="dropdown-item" data-currency="TRY"><span class="flag">🇹🇷</span> TRY - Lira</button>
+                        <button class="dropdown-item" data-currency="INR"><span class="flag">🇮🇳</span> INR - Rupee</button>
+                    </div>
+                </div>
+                <a href="index.html" class="btn btn-outline btn-sm">
+                    <i class="fas fa-arrow-left"></i> <span data-i18n="checkout_back">Kembali</span>
+                </a>
+                <button class="mobile-toggle" id="mobileToggle">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Checkout Section -->
+    <section class="checkout-section">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="checkout-breadcrumb">
+                <a href="index.html"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="index.html#products"><span data-i18n="nav_products">Products</span></a>
+                <i class="fas fa-chevron-right"></i>
+                <span class="active" data-i18n="checkout_title">Checkout</span>
+            </div>
+
+            <h1 class="checkout-page-title">
+                <i class="fas fa-lock"></i> <span data-i18n="checkout_title">Checkout</span>
+            </h1>
+
+            <!-- Empty Cart State -->
+            <div class="checkout-empty" id="checkoutEmpty" style="display:none;">
+                <div class="checkout-empty-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <h2 data-i18n="cart_empty">Keranjang kamu kosong</h2>
+                <p data-i18n="checkout_empty_desc">Tambahkan produk ke keranjang terlebih dahulu sebelum checkout.</p>
+                <a href="index.html#products" class="btn btn-primary btn-lg">
+                    <i class="fas fa-store"></i> <span data-i18n="hero_btn_products">Lihat Produk</span>
+                </a>
+            </div>
+
+            <!-- Checkout Content -->
+            <div class="checkout-grid" id="checkoutGrid">
+                <!-- Left Column - Form -->
+                <div class="checkout-form-column">
+                    <!-- Step Indicators -->
+                    <div class="checkout-steps">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <span data-i18n="checkout_billing">Informasi Pembeli</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <span data-i18n="checkout_payment">Metode Pembayaran</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <span data-i18n="checkout_confirm">Konfirmasi</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Billing Information -->
+                    <div class="checkout-step-content active" id="step1">
+                        <div class="form-card">
+                            <div class="form-card-header">
+                                <i class="fas fa-user-circle"></i>
+                                <h3 data-i18n="checkout_billing">Informasi Pembeli</h3>
+                            </div>
+                            <div class="form-card-body">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName" data-i18n="checkout_fname">Nama Depan</label>
+                                        <input type="text" id="firstName" class="form-input" placeholder="John" required>
+                                        <span class="form-error" id="firstNameError"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName" data-i18n="checkout_lname">Nama Belakang</label>
+                                        <input type="text" id="lastName" class="form-input" placeholder="Doe" required>
+                                        <span class="form-error" id="lastNameError"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" data-i18n="checkout_email">Email</label>
+                                    <div class="input-icon">
+                                        <i class="fas fa-envelope"></i>
+                                        <input type="email" id="email" class="form-input with-icon" placeholder="john@example.com" required>
+                                    </div>
+                                    <span class="form-error" id="emailError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="discord" data-i18n="checkout_discord">Discord Username</label>
+                                    <div class="input-icon">
+                                        <i class="fab fa-discord"></i>
+                                        <input type="text" id="discord" class="form-input with-icon" placeholder="username#1234" required>
+                                    </div>
+                                    <span class="form-error" id="discordError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="country" data-i18n="checkout_country">Negara</label>
+                                    <div class="input-icon">
+                                        <i class="fas fa-globe"></i>
+                                        <select id="country" class="form-input form-select with-icon" required>
+                                            <option value="">-- Pilih Negara --</option>
+                                            <option value="ID">🇮🇩 Indonesia</option>
+                                            <option value="US">🇺🇸 United States</option>
+                                            <option value="GB">🇬🇧 United Kingdom</option>
+                                            <option value="DE">🇩🇪 Germany</option>
+                                            <option value="FR">🇫🇷 France</option>
+                                            <option value="ES">🇪🇸 Spain</option>
+                                            <option value="JP">🇯🇵 Japan</option>
+                                            <option value="KR">🇰🇷 South Korea</option>
+                                            <option value="CN">🇨🇳 China</option>
+                                            <option value="BR">🇧🇷 Brazil</option>
+                                            <option value="RU">🇷🇺 Russia</option>
+                                            <option value="TH">🇹🇭 Thailand</option>
+                                            <option value="TR">🇹🇷 Turkey</option>
+                                            <option value="IN">🇮🇳 India</option>
+                                            <option value="AU">🇦🇺 Australia</option>
+                                            <option value="CA">🇨🇦 Canada</option>
+                                            <option value="MY">🇲🇾 Malaysia</option>
+                                            <option value="SG">🇸🇬 Singapore</option>
+                                            <option value="PH">🇵🇭 Philippines</option>
+                                            <option value="VN">🇻🇳 Vietnam</option>
+                                            <option value="OTHER">🌍 Other</option>
+                                        </select>
+                                    </div>
+                                    <span class="form-error" id="countryError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes" data-i18n="checkout_notes">Catatan (Opsional)</label>
+                                    <textarea id="notes" class="form-input form-textarea" rows="3" placeholder="Server name, framework info, etc."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-card-footer">
+                                <a href="index.html#products" class="btn btn-outline">
+                                    <i class="fas fa-arrow-left"></i> <span data-i18n="checkout_continue_shopping">Lanjut Belanja</span>
+                                </a>
+                                <button class="btn btn-primary" id="toStep2Btn">
+                                    <span data-i18n="checkout_next">Lanjut</span> <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Payment Method -->
+                    <div class="checkout-step-content" id="step2">
+                        <div class="form-card">
+                            <div class="form-card-header">
+                                <i class="fas fa-credit-card"></i>
+                                <h3 data-i18n="checkout_payment">Metode Pembayaran</h3>
+                            </div>
+                            <div class="form-card-body">
+                                <div class="payment-methods">
+                                    <label class="payment-method active" data-method="paypal">
+                                        <input type="radio" name="payment" value="paypal" checked>
+                                        <div class="payment-method-content">
+                                            <div class="payment-method-icon"><i class="fab fa-paypal"></i></div>
+                                            <div class="payment-method-info">
+                                                <h4>PayPal</h4>
+                                                <p data-i18n="checkout_paypal_desc">Bayar dengan akun PayPal</p>
+                                            </div>
+                                            <div class="payment-check"><i class="fas fa-check-circle"></i></div>
+                                        </div>
+                                    </label>
+                                    <label class="payment-method" data-method="stripe">
+                                        <input type="radio" name="payment" value="stripe">
+                                        <div class="payment-method-content">
+                                            <div class="payment-method-icon"><i class="fab fa-stripe-s"></i></div>
+                                            <div class="payment-method-info">
+                                                <h4>Credit/Debit Card</h4>
+                                                <p data-i18n="checkout_stripe_desc">Visa, Mastercard, dll.</p>
+                                            </div>
+                                            <div class="payment-check"><i class="fas fa-check-circle"></i></div>
+                                        </div>
+                                    </label>
+                                    <label class="payment-method" data-method="crypto">
+                                        <input type="radio" name="payment" value="crypto">
+                                        <div class="payment-method-content">
+                                            <div class="payment-method-icon"><i class="fab fa-bitcoin"></i></div>
+                                            <div class="payment-method-info">
+                                                <h4>Cryptocurrency</h4>
+                                                <p data-i18n="checkout_crypto_desc">Bitcoin, Ethereum, USDT</p>
+                                            </div>
+                                            <div class="payment-check"><i class="fas fa-check-circle"></i></div>
+                                        </div>
+                                    </label>
+                                    <label class="payment-method" data-method="ewallet">
+                                        <input type="radio" name="payment" value="ewallet">
+                                        <div class="payment-method-content">
+                                            <div class="payment-method-icon"><i class="fas fa-wallet"></i></div>
+                                            <div class="payment-method-info">
+                                                <h4>E-Wallet</h4>
+                                                <p data-i18n="checkout_ewallet_desc">GoPay, OVO, Dana, ShopeePay</p>
+                                            </div>
+                                            <div class="payment-check"><i class="fas fa-check-circle"></i></div>
+                                        </div>
+                                    </label>
+                                    <label class="payment-method" data-method="bank">
+                                        <input type="radio" name="payment" value="bank">
+                                        <div class="payment-method-content">
+                                            <div class="payment-method-icon"><i class="fas fa-university"></i></div>
+                                            <div class="payment-method-info">
+                                                <h4>Bank Transfer</h4>
+                                                <p data-i18n="checkout_bank_desc">Transfer via bank lokal</p>
+                                            </div>
+                                            <div class="payment-check"><i class="fas fa-check-circle"></i></div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <!-- Payment Details (conditional) -->
+                                <div class="payment-details" id="paymentDetails">
+                                    <div class="payment-detail-card" id="paypalDetail">
+                                        <div class="payment-detail-info">
+                                            <i class="fab fa-paypal" style="font-size:32px;color:#00457C;"></i>
+                                            <p data-i18n="checkout_paypal_info">Anda akan diarahkan ke PayPal untuk menyelesaikan pembayaran.</p>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail-card" id="stripeDetail" style="display:none;">
+                                        <div class="payment-detail-info">
+                                            <i class="fab fa-stripe-s" style="font-size:32px;color:#635BFF;"></i>
+                                            <p data-i18n="checkout_stripe_info">Pembayaran kartu kredit/debit diproses secara aman melalui Stripe.</p>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail-card" id="cryptoDetail" style="display:none;">
+                                        <div class="payment-detail-info">
+                                            <i class="fab fa-bitcoin" style="font-size:32px;color:#F7931A;"></i>
+                                            <p data-i18n="checkout_crypto_info">Anda akan menerima alamat wallet untuk mengirim pembayaran crypto.</p>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail-card" id="ewalletDetail" style="display:none;">
+                                        <div class="payment-detail-info">
+                                            <i class="fas fa-wallet" style="font-size:32px;color:#2ECC71;"></i>
+                                            <p data-i18n="checkout_ewallet_info">Pilih e-wallet Anda dan selesaikan pembayaran melalui aplikasi.</p>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail-card" id="bankDetail" style="display:none;">
+                                        <div class="payment-detail-info">
+                                            <i class="fas fa-university" style="font-size:32px;color:#3498DB;"></i>
+                                            <p data-i18n="checkout_bank_info">Detail rekening bank akan diberikan setelah order dikonfirmasi.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="secure-badge">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span data-i18n="checkout_secure">Pembayaran aman & terenkripsi</span>
+                                </div>
+                            </div>
+                            <div class="form-card-footer">
+                                <button class="btn btn-outline" id="backToStep1Btn">
+                                    <i class="fas fa-arrow-left"></i> <span data-i18n="checkout_back">Kembali</span>
+                                </button>
+                                <button class="btn btn-primary" id="toStep3Btn">
+                                    <span data-i18n="checkout_next">Lanjut</span> <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Confirmation -->
+                    <div class="checkout-step-content" id="step3">
+                        <div class="form-card">
+                            <div class="form-card-header">
+                                <i class="fas fa-clipboard-check"></i>
+                                <h3 data-i18n="checkout_confirm">Konfirmasi Pesanan</h3>
+                            </div>
+                            <div class="form-card-body">
+                                <!-- Billing Summary -->
+                                <div class="confirm-section">
+                                    <h4><i class="fas fa-user"></i> <span data-i18n="checkout_billing">Informasi Pembeli</span></h4>
+                                    <div class="confirm-details" id="confirmBilling"></div>
+                                </div>
+
+                                <!-- Payment Summary -->
+                                <div class="confirm-section">
+                                    <h4><i class="fas fa-credit-card"></i> <span data-i18n="checkout_payment">Metode Pembayaran</span></h4>
+                                    <div class="confirm-details" id="confirmPayment"></div>
+                                </div>
+
+                                <!-- Order Items -->
+                                <div class="confirm-section">
+                                    <h4><i class="fas fa-box"></i> <span data-i18n="checkout_items">Item Pesanan</span></h4>
+                                    <div class="confirm-items" id="confirmItems"></div>
+                                </div>
+
+                                <!-- Terms -->
+                                <div class="checkout-terms">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="agreeTerms">
+                                        <span class="checkmark"></span>
+                                        <span data-i18n="checkout_agree">Saya setuju dengan <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Refund</a></span>
+                                    </label>
+                                    <span class="form-error" id="termsError"></span>
+                                </div>
+                            </div>
+                            <div class="form-card-footer">
+                                <button class="btn btn-outline" id="backToStep2Btn">
+                                    <i class="fas fa-arrow-left"></i> <span data-i18n="checkout_back">Kembali</span>
+                                </button>
+                                <button class="btn btn-primary btn-lg" id="placeOrderBtn">
+                                    <i class="fas fa-lock"></i> <span data-i18n="checkout_place">Bayar Sekarang</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Order Summary -->
+                <div class="checkout-summary-column">
+                    <div class="summary-card sticky">
+                        <div class="summary-header">
+                            <h3><i class="fas fa-receipt"></i> <span data-i18n="checkout_summary">Ringkasan Pesanan</span></h3>
+                        </div>
+                        <div class="summary-items" id="summaryItems"></div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row">
+                            <span data-i18n="checkout_subtotal">Subtotal</span>
+                            <span id="summarySubtotal">Rp 0</span>
+                        </div>
+                        <div class="summary-row discount" id="discountRow" style="display:none;">
+                            <span data-i18n="checkout_discount">Diskon</span>
+                            <span id="summaryDiscount" class="discount-amount">- Rp 0</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row total">
+                            <span data-i18n="cart_total">Total:</span>
+                            <span id="summaryTotal">Rp 0</span>
+                        </div>
+
+                        <!-- Coupon Code -->
+                        <div class="coupon-section">
+                            <div class="coupon-input-group">
+                                <input type="text" id="couponInput" class="form-input" placeholder="Kode Kupon" data-i18n-placeholder="checkout_coupon_placeholder">
+                                <button class="btn btn-outline btn-sm" id="applyCouponBtn" data-i18n="checkout_apply">Terapkan</button>
+                            </div>
+                            <span class="coupon-message" id="couponMessage"></span>
+                        </div>
+
+                        <!-- Trust Badges -->
+                        <div class="trust-badges">
+                            <div class="trust-badge">
+                                <i class="fas fa-shield-alt"></i>
+                                <span data-i18n="checkout_trust_secure">Pembayaran Aman</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fas fa-undo"></i>
+                                <span data-i18n="checkout_trust_refund">Garansi Refund</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fas fa-headset"></i>
+                                <span data-i18n="checkout_trust_support">Support 24/7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content success-modal">
+            <div class="success-animation">
+                <div class="success-checkmark">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            <h2 data-i18n="checkout_success_title">Pesanan Berhasil! 🎉</h2>
+            <p data-i18n="checkout_success_desc">Terima kasih atas pembelian Anda. Detail pesanan telah dikirim ke email Anda.</p>
+            <div class="success-order-id">
+                <span>Order ID:</span>
+                <strong id="orderId">#EXT-000000</strong>
+            </div>
+            <div class="success-details">
+                <div class="success-detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <span data-i18n="checkout_success_email">Cek email Anda untuk detail pembayaran</span>
+                </div>
+                <div class="success-detail-item">
+                    <i class="fab fa-discord"></i>
+                    <span data-i18n="checkout_success_discord">Join Discord kami untuk menerima script</span>
+                </div>
+                <div class="success-detail-item">
+                    <i class="fas fa-clock"></i>
+                    <span data-i18n="checkout_success_delivery">Pengiriman dalam 1-24 jam setelah pembayaran</span>
+                </div>
+            </div>
+            <div class="success-buttons">
+                <a href="index.html" class="btn btn-primary btn-lg">
+                    <i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span>
+                </a>
+                <a href="https://discord.gg/" class="btn btn-outline btn-lg" target="_blank">
+                    <i class="fab fa-discord"></i> Join Discord
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <img src="logo.png" alt="ExterStore Logo" class="logo-img">
+                        <span class="logo-text">ExterStore</span>
+                    </a>
+                    <p class="footer-desc" data-i18n="footer_desc">Script FiveM premium untuk server kamu. Kualitas terbaik dengan harga terjangkau.</p>
+                    <div class="footer-socials">
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links-group">
+                    <h4 data-i18n="footer_quick">Link Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+                        <li><a href="index.html#products" data-i18n="nav_products">Products</a></li>
+                        <li><a href="index.html#features" data-i18n="nav_features">Features</a></li>
+                        <li><a href="index.html#testimonials" data-i18n="nav_reviews">Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4 data-i18n="footer_resources">Sumber Daya</h4>
+                    <ul class="footer-links">
+                        <li><a href="docs.html" data-i18n="nav_docs">Documentation</a></li>
+                        <li><a href="docs.html#installation">Installation</a></li>
+                        <li><a href="docs.html#configuration">Configuration</a></li>
+                        <li><a href="docs.html#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4 data-i18n="footer_support">Dukungan</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Discord Server</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ExterStore. All rights reserved. Made with <i class="fas fa-heart" style="color: #2ECC71;"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="checkout.js"></script>
+</body>
+</html>
